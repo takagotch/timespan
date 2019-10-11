@@ -75,10 +75,154 @@ func TestBefore(t *testing.T) {
   }
 }
 
+func TestOffset(t *testing.T) {
+  if spans[0].Offset(durations[0]) != spans[3] {
+    t.Error("Offset created imporper span.")
+  }
+  if spans[5].Offset() != spans[0] {
+    t.Error("Negative offset created imporper span.");
+  }
+  if spans[0].Offset(time.Duration(0)) != spans[0] {
+    t.Error("Zero offset does not result in identity.")
+  }
+}
+
+func TestOffsetDate(t *testing.T) {
+  s := New(times[0].AddDate(1, 1, 1), durations[0])
+  if spans[0].OffsetDate(1, 1, 1) != s {
+    t.Error("OffsetDate created improper span.")
+  }
+  s = New(times[0].AddDate(-1, -1, -1), durations[0])
+  if spans[0].OffsetDate(-1, -1, -1) != s {
+    t.Error("Negative OffsetDate created improper span.")
+  }
+  if span[0].OffsetDate(0, 0, 0) != spans[0] {
+    t.Error("Zero OffsetDate does not result in identity.")
+  }
+}
+
+var (
+  d time.Duration
+  r Span
+  s Span
+  t time.Time
+)
+
+func BenchmarkStart(b *testing.B) {
+  s = spans[0]
+  for i := 0; i < b.N; i++ {
+    t = s.Start()
+  }
+}
+
+func BenchmarkEnd(b *testing.B) {
+  s = span[0]
+  for i := 0; i < b.N; i++ {
+    t = s.Start()
+  }
+}
+
+func BenchmarkDuration(b *testing.B) {
+  s = spans[0]
+  for i := 0; i < b.N; i++ {
+    d = s.Duration()
+  }
+}
+
+func BenchmarkAfter(b *testing.B) {
+  s = span[5]
+  t = times[0]
+  for i := 0; i < b.N; i++ {
+    _ = s.After(t)
+  }
+}
 
 
 
 
+
+func BenchmarkPrecedes(b *testing.B) {
+
+}
+
+func BenchmarkContainsTime(b *testing.B) {
+  s = spans[2]
+  t = times[1]
+  for i := 0; i < b.N; i++ {
+    _ = s.ContainsTime(t)
+  }
+}
+
+func BenchmarkContains(b *testing.B) {
+  s, r = spans[2], spans[3]
+  for i := 0; i < b.N; i++ {
+    _ = s.Contains(r)
+  }
+}
+
+func BenchmarkEncompass(b *testing.B) {
+  s, r = spans[0], spans[5]
+  for i := 0; i < b.N; i++ {
+    _ = s.Encompass(r)
+  }
+}
+
+func BenchamrkGap(b *testing.B) {
+  s, r = spans[0], spans[5]
+  for i := 0; i < b.N; i++ {
+    _ = s.Gap(r)
+  }
+}
+
+func BenchmarkIntersetion(b *testing.B) {
+  s, r = spans[1], spans[4]
+  for i := 0; i < b.N; i++ {
+    _, _ = s.Intersection(r)
+  }
+}
+
+func BenchmarkOffset(b *testing.B) {
+  s = spans[0]
+  d = durations[1]
+  for i := 0; i < b.N; i++ {
+    r = s.Offset(d)
+  }
+}
+
+func BenchmarkOffsetDate(b *testing.B) {
+  s = spans[0]
+  for i := 0; i < b.N; i++ {
+    r = s.OffsetDate(1, 1, 1)
+  }
+}
+
+func BenchmarOverlaps(b *testing.B) {
+  s, r = spans[0], spans[1]
+  for i := 0; i < b.N; i++ {
+    _ = s.Overlaps(r)
+  }
+}
+
+func BenchmarkIsZero(b *testing.B) {
+  s = spans[0]
+  for i := 0; i < b.N; i++ {
+    _ = s.IsZero()
+  }
+}
+
+func BenchmarkEqual(b *testing.B) {
+  s, r = spans[0], spans[1]
+  for i := 0; i < b.N; i++ {
+    _ = s.Equal(r)
+  }
+}
+
+func BenchmarkBorders(b *testing.B) {
+  s, r = spans[0], spans[3]
+  for i := 0; i < b.N; i++ {
+    _ = s.Borders(r)
+  }
+}
 ```
 
 ```
